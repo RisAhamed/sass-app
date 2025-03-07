@@ -1,6 +1,8 @@
 'use client';
 import { Inter } from 'next/font/google';
 import { createContext, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -11,6 +13,7 @@ export const ThemeContext = createContext({ darkMode: false });
 // Sidebar component
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname(); // Get current path for active state
   
   return (
     <div
@@ -19,29 +22,59 @@ const Sidebar = () => {
       onMouseLeave={() => setIsOpen(false)}
     >
       <div className="h-full flex">
-        {/* Visible trigger button when closed */}
+        {/* Trigger area - more visible now */}
         <div 
-          className={`w-8 h-full flex items-center justify-center bg-pink-300 hover:bg-pink-400 transition-colors duration-300 ${isOpen ? 'hidden' : 'block'}`}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
+          className={`w-3 h-full bg-gradient-to-r from-pink-400 to-purple-500 transition-all duration-300 
+            ${isOpen ? 'opacity-0' : 'opacity-100'}`}
+        />
         
         {/* Sidebar content */}
         <div 
-          className={`bg-gradient-to-r from-pink-100 to-purple-100 h-full overflow-hidden transition-all duration-300 ease-in-out shadow-lg ${
-            isOpen ? 'w-64' : 'w-0'
-          }`}
+          className={`bg-gradient-to-r from-pink-100 to-purple-100 h-full overflow-hidden 
+            transition-all duration-500 ease-in-out shadow-lg
+            ${isOpen ? 'w-64' : 'w-0'}`}
         >
-          <div className="p-4">
-            <h2 className="text-xl font-bold mb-4 text-purple-800">Page Contents</h2>
-            <ul className="space-y-2">
-              <li><a href="/" className="text-purple-600 hover:underline">Home</a></li>
-              <li><a href="/dashboard" className="text-purple-600 hover:underline">Dashboard</a></li>
-              <li><a href="#" className="text-purple-600 hover:underline">Features</a></li>
-              <li><a href="#" className="text-purple-600 hover:underline">Pricing</a></li>
-              <li><a href="#" className="text-purple-600 hover:underline">Contact</a></li>
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
+              Navigation
+            </h2>
+            <ul className="space-y-4">
+              <li>
+                <a 
+                  href="/" 
+                  className={`block p-3 rounded-lg transition-all duration-300
+                    ${pathname === '/' 
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30' 
+                      : 'text-purple-600 hover:text-white hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:shadow-lg hover:shadow-purple-500/30'}
+                    transform hover:translate-x-1`}
+                >
+                  Home
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/dashboard" 
+                  className={`block p-3 rounded-lg transition-all duration-300
+                    ${pathname === '/dashboard' 
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30' 
+                      : 'text-purple-600 hover:text-white hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:shadow-lg hover:shadow-purple-500/30'}
+                    transform hover:translate-x-1`}
+                >
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/pricing" 
+                  className={`block p-3 rounded-lg transition-all duration-300
+                    ${pathname === '/pricing' 
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30' 
+                      : 'text-purple-600 hover:text-white hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:shadow-lg hover:shadow-purple-500/30'}
+                    transform hover:translate-x-1`}
+                >
+                  Pricing
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -54,15 +87,18 @@ function RootLayout({ children }) {
   return (
     <ThemeContext.Provider value={{ darkMode: false }}>
       <html lang="en">
+        <head>
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+        </head>
         <body className={`${inter.className}`}>
           <Sidebar />
           <nav className="bg-white bg-opacity-70 backdrop-blur-sm shadow-md p-4 relative z-10">
             <div className="container mx-auto flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">SaaS Demo</h1>
+              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500">
+                SaaS Demo
+              </h1>
               <div className="flex items-center space-x-4">
-                <a href="#" className="text-gray-600 hover:text-purple-600">Features</a>
-                <a href="#" className="text-gray-600 hover:text-purple-600">Pricing</a>
-                <a href="#" className="text-gray-600 hover:text-purple-600">Contact</a>
+                <a href="/pricing" className="text-gray-600 hover:text-purple-600">Pricing</a>
               </div>
             </div>
           </nav>
